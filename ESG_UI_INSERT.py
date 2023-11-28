@@ -12,6 +12,7 @@ conn = psycopg2.connect(
     password="Manisha13",
 )
 
+
 def insert_data(store_id, address, city, postalcode, ownername, contactno, emailid):
     try:
         # Insert data into the 'storedetails' table
@@ -29,19 +30,27 @@ def insert_data(store_id, address, city, postalcode, ownername, contactno, email
 
 
 def insert_waste_data(retail_store_id, date_generated, date_entered,
-                       data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units,
-                       paper_wastage, paper_waste_units):
+                      data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units,
+                      paper_wastage, paper_waste_units):
     try:
         # Insert data into the 'storedetails' table
         with conn, conn.cursor() as cursor:
-            cursor.execute("INSERT INTO public.wastemanagement(retail_store_id, date_generated, date_entered, "
-                           "data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units, "
-                           "paper_wastage, paper_waste_units)"
-                           "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                           (retail_store_id, date_generated, date_entered,
-                           data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units,
-                           paper_wastage, paper_waste_units))
-        return retail_store_id
+            # Assuming that retail_store_id, date_generated, and date_entered are also variables
+            sql_command = "INSERT INTO public.wastemanagement(retail_store_id, date_generated, date_entered, " \
+                          "data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units, " \
+                          "paper_wastage, paper_waste_units) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', " \
+                          "'{}', '{}')".format(retail_store_id, date_generated, date_entered, data_load_type,
+                                               food_wastage,
+                                               food_wastage_units, plastic_wastage, units_plastic_units,
+                                               paper_wastage,
+                                               paper_waste_units)
+
+            # Assuming you have a database connection and a cursor
+            cursor.execute(sql_command, (retail_store_id, date_generated, date_entered, data_load_type, food_wastage,
+                                         food_wastage_units, plastic_wastage, units_plastic_units, paper_wastage,
+                                         paper_waste_units))
+
+            return retail_store_id
     except Exception as e:
         # Handle the exception, you can print an error message or log the exception details
         print(f"Error inserting data: {e}")
@@ -60,6 +69,7 @@ def insert_user(username, password):
         # Handle the exception, you can print an error message or log the exception details
         print(f"Error inserting data: {e}")
         return None
+
 
 def verify_user(username, password):
     try:

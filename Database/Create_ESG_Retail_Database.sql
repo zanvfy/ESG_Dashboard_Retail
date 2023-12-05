@@ -67,13 +67,8 @@ CREATE TABLE WaterConsumption (
    FOREIGN KEY (Retail_Store_Id) REFERENCES StoreDetails(Retail_Store_Id)
 );
 
-
-CREATE TABLE users
-(
-
-    id integer NOT NULL,
-    username character varying(50) NOT NULL,
-    password_hash character varying(60) NOT NULL,
-    CONSTRAINT users_pkey PRIMARY KEY (id),
-    CONSTRAINT users_username_key UNIQUE (username)
+CREATE TABLE users (
+user_id SERIAL PRIMARY KEY,
+username VARCHAR(255) UNIQUE NOT NULL,
+password_hash VARCHAR(255) NOT NULL
 );

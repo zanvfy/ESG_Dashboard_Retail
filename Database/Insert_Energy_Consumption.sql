@@ -37,7 +37,7 @@ INSERT INTO public.energyconsumption(
 	retail_store_id, date_generated, date_entered, data_load_type, light_consumption, 
 	light_consumption_units, temp_outside, temp_outside_units, temp_inside, temp_inside_units, 
 	refridgerator_usage, refridgerator_usage_units)
-	VALUES (003,'2023-09-31','2023-10-21','Monthly', 3919,'kWh',23.7,'C', 11.4, 'C',1876,'kWh');
+	VALUES (003,'2023-09-3','2023-10-21','Monthly', 3919,'kWh',23.7,'C', 11.4, 'C',1876,'kWh');
 INSERT INTO public.energyconsumption(
 	retail_store_id, date_generated, date_entered, data_load_type, light_consumption, 
 	light_consumption_units, temp_outside, temp_outside_units, temp_inside, temp_inside_units, 

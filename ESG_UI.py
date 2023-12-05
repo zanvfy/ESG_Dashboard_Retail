@@ -4,33 +4,33 @@ from tkcalendar import DateEntry
 import ESG_UI_INSERT as EI
 import ESG_UI_SUBMIT as ES
 
-
+# Function to create a label with optional '*' for mandatory fields
 def create_label(frame, text, mandatory=False):
     label_text = text + '*' if mandatory else text
     tk.Label(frame, text=label_text, font=('Helvetica', 14), bg=bg_color, fg='white').pack(pady=5, anchor='w')
 
-
+# Function to create a button with specified properties
 def create_button(parent, text, command, side, **kwargs):
     tk.Button(parent, text=text, command=command, font=('Helvetica', 14), relief=tk.FLAT, bg='#55acee', fg='white',
               **kwargs).pack(side=side, pady=10, padx=10)
 
-
+# Function to create an entry widget
 def create_entry(parent, font=('Helvetica', 14), pady=5, padx=5, fill='x', **kwargs):
     entry = tk.Entry(parent, font=font, **kwargs)
     entry.pack(pady=pady, padx=padx, fill=fill)
     return entry
 
-
+# Function to create a date entry widget
 def create_date_entry(parent, font=('Helvetica', 14), pady=5, padx=5, fill='x', **kwargs):
     entry = DateEntry(parent, font=font, **kwargs)
     entry.pack(pady=pady, padx=padx, fill=fill)
     return entry
 
-
+# Function to handle the 'Done' button
 def done():
     root.destroy()
 
-
+# Function to handle the login process
 def login_handler():
     username = username_entry.get()
     password = password_entry.get()
@@ -40,17 +40,17 @@ def login_handler():
     else:
         messagebox.showerror('Error', 'Invalid credentials.')
 
-
+# Function to switch to the registration frame
 def switch_to_register():
     login_frame.grid_forget()
     reg_frame.grid(row=1, column=0, columnspan=2)
 
-
+# Function to switch back to the login frame
 def back_to_login():
     reg_frame.grid_forget()
     login_frame.grid(row=1, column=0, columnspan=2)
 
-
+# Function to register a new user
 def register_user():
     username = reg_username_entry.get()
     password = reg_password_entry.get()
@@ -148,6 +148,7 @@ labels_frame.pack(side='left', fill='both', expand=True)
 entries_frame = tk.Frame(data_entry_frame, bg=bg_color)
 entries_frame.pack(side='left', fill='both', expand=True)
 
+# creating label
 create_label(labels_frame, 'Store ID', mandatory=True)
 create_label(labels_frame, 'Store Address', mandatory=True)
 create_label(labels_frame, 'City', mandatory=True)
@@ -189,7 +190,7 @@ tabs.add(waste_frame, text='Waste Management')
 waste_labels_frame = tk.Frame(waste_frame, bg=bg_color)
 waste_labels_frame.pack(side='left', fill='both', expand=True)
 
-# Usage example:
+# creating label
 create_label(waste_labels_frame, 'Store ID', mandatory=True)
 create_label(waste_labels_frame, 'Date Generated', mandatory=True)
 create_label(waste_labels_frame, 'Date Entered', mandatory=True)
@@ -209,6 +210,7 @@ waste_buttons_frame.pack(side='bottom', fill='both', expand=True)
 waste_entries_frame = tk.Frame(waste_frame, bg=bg_color)
 waste_entries_frame.pack(side='left', fill='both', expand=True)
 
+# creating entry
 store_id_waste_entry = create_entry(waste_entries_frame)
 date_generated_waste_entry = create_date_entry(waste_entries_frame, date_pattern='yyyy-mm-dd')
 date_entered_waste_entry = create_date_entry(waste_entries_frame, date_pattern='yyyy-mm-dd')
@@ -236,7 +238,7 @@ tabs.add(energy_frame, text='Energy Consumption')
 energy_labels_frame = tk.Frame(energy_frame, bg=bg_color)
 energy_labels_frame.pack(side='left', fill='both', expand=True)
 
-# Usage example:
+# label
 create_label(energy_labels_frame, 'Store ID', mandatory=True)
 create_label(energy_labels_frame, 'Date Generated', mandatory=True)
 create_label(energy_labels_frame, 'Date Entered', mandatory=True)
@@ -258,6 +260,7 @@ energy_buttons_frame.pack(side='bottom', fill='both', expand=True)
 energy_entries_frame = tk.Frame(energy_frame, bg=bg_color)
 energy_entries_frame.pack(side='left', fill='both', expand=True)
 
+# creating entry
 store_id_energy_entry = create_entry(energy_entries_frame)
 date_generated_energy_entry = create_date_entry(energy_entries_frame, date_pattern='yyyy-mm-dd')
 date_entered_energy_entry = create_date_entry(energy_entries_frame, date_pattern='yyyy-mm-dd')
@@ -288,7 +291,7 @@ tabs.add(water_frame, text='Water Consumption')
 water_labels_frame = tk.Frame(water_frame, bg=bg_color)
 water_labels_frame.pack(side='left', fill='both', expand=True)
 
-# Usage example:
+# creating label
 create_label(water_labels_frame, 'Store ID', mandatory=True)
 create_label(water_labels_frame, 'Date Generated', mandatory=True)
 create_label(water_labels_frame, 'Date Entered', mandatory=True)
@@ -308,6 +311,7 @@ water_buttons_frame.pack(side='bottom', fill='both', expand=True)
 water_entries_frame = tk.Frame(water_frame, bg=bg_color)
 water_entries_frame.pack(side='left', fill='both', expand=True)
 
+# creating entry
 store_id_water_entry = create_entry(water_entries_frame)
 date_generated_water_entry = create_date_entry(water_entries_frame, date_pattern='yyyy-mm-dd')
 date_entered_water_entry = create_date_entry(water_entries_frame, date_pattern='yyyy-mm-dd')
@@ -336,7 +340,7 @@ tabs.add(fuel_frame, text='Fuel Consumption')
 fuel_labels_frame = tk.Frame(fuel_frame, bg=bg_color)
 fuel_labels_frame.pack(side='left', fill='both', expand=True)
 
-# Usage example:
+# creating label
 create_label(fuel_labels_frame, 'Store ID', mandatory=True)
 create_label(fuel_labels_frame, 'Date Generated', mandatory=True)
 create_label(fuel_labels_frame, 'Date Entered', mandatory=True)
@@ -356,6 +360,7 @@ fuel_buttons_frame.pack(side='bottom', fill='both', expand=True)
 fuel_entries_frame = tk.Frame(fuel_frame, bg=bg_color)
 fuel_entries_frame.pack(side='right', fill='both', expand=True)
 
+# creating entry
 store_id_fuel_entry = create_entry(fuel_entries_frame)
 date_generated_fuel_entry = create_date_entry(fuel_entries_frame, date_pattern='yyyy-mm-dd')
 date_entered_fuel_entry = create_date_entry(fuel_entries_frame, date_pattern='yyyy-mm-dd')

@@ -1,9 +1,10 @@
 # Database connection parameters
-from tkinter import messagebox
+from tkinter import messagebox  # Consider importing only the necessary functions/classes instead of everything
 
 import psycopg2
 from bcrypt import hashpw, gensalt
 
+# Establish a database connection
 conn = psycopg2.connect(
     host="localhost",
     port=5432,
@@ -12,107 +13,73 @@ conn = psycopg2.connect(
     password="Manisha13",
 )
 
-
 def insert_data(store_id, address, city, postalcode, ownername, contactno, emailid):
+    #Insert store details into the 'storedetails' table.
+
     try:
-        # Insert data into the 'storedetails' table
         with conn, conn.cursor() as cursor:
-            cursor.execute("INSERT INTO public.storedetails(retail_store_id, retail_store_address, retail_store_city, "
-                           "retail_store_postalcode, retail_store_ownername, retail_store_contactno, retail_store_emailid) "
-                           "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                           (store_id, address, city, postalcode, ownername, contactno, emailid))
+            # Use parameterized query to prevent SQL injection
+            cursor.execute("""
+                INSERT INTO public.storedetails(retail_store_id, retail_store_address, retail_store_city,
+                                               retail_store_postalcode, retail_store_ownername,
+                                               retail_store_contactno, retail_store_emailid)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (store_id, address, city, postalcode, ownername, contactno, emailid))
         return store_id
     except Exception as e:
-        # Handle the exception, you can print an error message or log the exception details
+        # Handle the exception, log or show an error message
         print(f"Error inserting data: {e}")
         messagebox.showinfo('Error', f'Error inserting data: {e} {store_id}')
         return None
 
 
+# Function to insert waste management data into the 'wastemanagement' table
 def insert_waste_data(retail_store_id, date_generated, date_entered,
                       data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units,
                       paper_wastage, paper_waste_units):
     try:
-        # Insert data into the 'storedetails' table
+        # Insert data into the 'wastemanagement' table
         with conn, conn.cursor() as cursor:
-            # Assuming that retail_store_id, date_generated, and date_entered are also variables
-            sql_command = "INSERT INTO public.wastemanagement(retail_store_id, date_generated, date_entered, " \
-                          "data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units, " \
-                          "paper_wastage, paper_waste_units) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', " \
-                          "'{}', '{}')".format(retail_store_id, date_generated, date_entered, data_load_type,
-                                               food_wastage,
-                                               food_wastage_units, plastic_wastage, units_plastic_units,
-                                               paper_wastage,
-                                               paper_waste_units)
-
-            # Assuming you have a database connection and a cursor
-            cursor.execute(sql_command, (retail_store_id, date_generated, date_entered, data_load_type, food_wastage,
-                                         food_wastage_units, plastic_wastage, units_plastic_units, paper_wastage,
-                                         paper_waste_units))
-
-            return retail_store_id
+            cursor.execute("INSERT INTO public.wastemanagement(retail_store_id, date_generated, date_entered, "
+                           "data_load_type, food_wastage, food_wastage_units, plastic_wastage, units_plastic_units, "
+                           "paper_wastage, paper_waste_units)"
+                           "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                           (retail_store_id, date_generated, date_entered, data_load_type,
+                            food_wastage, food_wastage_units, plastic_wastage, units_plastic_units,
+                            paper_wastage, paper_waste_units))
+        return retail_store_id
     except Exception as e:
         # Handle the exception, you can print an error message or log the exception details
-        print(f"Error inserting data: {e}")
-        messagebox.showinfo('Error', f'Error inserting data: {e} {retail_store_id}')
+        print(f"Error inserting waste data: {e}")
+        messagebox.showinfo('Error', f'Error inserting waste data: {e} {retail_store_id}')
         return None
 
 
-def insert_user(username, password):
-    # Insert user into the 'users' table
-    try:
-        with conn, conn.cursor() as cursor:
-            # Hash the password before storing it
-            hashed_password = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
-            cursor.execute('INSERT INTO users (username, password_hash) VALUES (%s, %s)', (username, hashed_password))
-    except Exception as e:
-        # Handle the exception, you can print an error message or log the exception details
-        print(f"Error inserting data: {e}")
-        return None
-
-
-def verify_user(username, password):
-    try:
-        # Verify user credentials
-        with conn, conn.cursor() as cursor:
-            cursor.execute('SELECT password_hash FROM users WHERE username = %s', (username,))
-            stored_hash = cursor.fetchone()
-
-        if stored_hash:
-            # Verify the password using bcrypt
-            stored_hash_str = stored_hash[0]
-            return hashpw(password.encode('utf-8'), stored_hash_str.encode('utf-8')).decode('utf-8') == stored_hash_str
-        else:
-            return False
-    except Exception as e:
-        # Handle the exception, you can print an error message or log the exception details
-        print(f"Error inserting data: {e}")
-        return None
-
-
+# Function to insert energy consumption data into the 'energyconsumption' table
 def insert_energy_data(retail_store_id, date_generated, date_entered, data_load_type,
                        light_consumption, light_consumption_units, temp_outside,
                        temp_outside_units, temp_inside, temp_inside_units,
-                       refridgerator_usage, refridgerator_usage_units):
+                       refrigerator_usage, refrigerator_usage_units):
     try:
         # Insert data into the 'energyconsumption' table
         with conn, conn.cursor() as cursor:
             cursor.execute("INSERT INTO public.energyconsumption(retail_store_id, date_generated, date_entered, "
                            "data_load_type, light_consumption, light_consumption_units, temp_outside, temp_outside_units, "
-                           "temp_inside, temp_inside_units, refridgerator_usage, refridgerator_usage_units) "
+                           "temp_inside, temp_inside_units, refrigerator_usage, refrigerator_usage_units) "
                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                            (retail_store_id, date_generated, date_entered, data_load_type,
                             light_consumption, light_consumption_units, temp_outside,
                             temp_outside_units, temp_inside, temp_inside_units,
-                            refridgerator_usage, refridgerator_usage_units))
+                            refrigerator_usage, refrigerator_usage_units))
         return retail_store_id
     except Exception as e:
         # Handle the exception, you can print an error message or log the exception details
-        print(f"Error inserting data: {e}")
-        messagebox.showinfo('Error', f'Error inserting data: {e} {retail_store_id}')
+        print(f"Error inserting energy data: {e}")
+        messagebox.showinfo('Error', f'Error inserting energy data: {e} {retail_store_id}')
         return None
 
 
+# Function to insert water consumption data into the 'waterconsumption' table
 def insert_water_data(retail_store_id, date_generated, date_entered, data_load_type,
                       drinking_water_consumption, drinking_water_consumption_units,
                       washroom_water_consumption, washroom_water_consumption_unit,
@@ -132,11 +99,12 @@ def insert_water_data(retail_store_id, date_generated, date_entered, data_load_t
         return retail_store_id
     except Exception as e:
         # Handle the exception, you can print an error message or log the exception details
-        print(f"Error inserting data: {e}")
-        messagebox.showinfo('Error', f'Error inserting data: {e} {retail_store_id}')
+        print(f"Error inserting water data: {e}")
+        messagebox.showinfo('Error', f'Error inserting water data: {e} {retail_store_id}')
         return None
 
 
+# Function to insert fuel consumption data into the 'fuelconsumption' table
 def insert_fuel_data(retail_store_id, date_generated, date_entered, data_load_type,
                      gasoline_consumed, gasoline_consumed_units, diesel_consumed, diesel_consumed_units,
                      electric_consumed, electric_consumed_units):
@@ -153,6 +121,6 @@ def insert_fuel_data(retail_store_id, date_generated, date_entered, data_load_ty
         return retail_store_id
     except Exception as e:
         # Handle the exception, you can print an error message or log the exception details
-        print(f"Error inserting data: {e}")
-        messagebox.showinfo('Error', f'Error inserting data: {e} {retail_store_id}')
+        print(f"Error inserting fuel data: {e}")
+        messagebox.showinfo('Error', f'Error inserting fuel data: {e} {retail_store_id}')
         return None

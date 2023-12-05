@@ -13,9 +13,40 @@ conn = psycopg2.connect(
     password="Manisha13",
 )
 
-def insert_data(store_id, address, city, postalcode, ownername, contactno, emailid):
-    #Insert store details into the 'storedetails' table.
+#insert new user
+def insert_user(username, password):
+    # Insert user into the 'users' table
+    try:
+        with conn, conn.cursor() as cursor:
+            # Hash the password before storing it
+            hashed_password = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
+            cursor.execute('INSERT INTO users (username, password_hash) VALUES (%s, %s)', (username, hashed_password))
+    except Exception as e:
+        # Handle the exception, you can print an error message or log the exception details
+        print(f"Error inserting data: {e}")
+        return None
 
+#verify user registered user
+def verify_user(username, password):
+    try:
+        # Verify user credentials
+        with conn, conn.cursor() as cursor:
+            cursor.execute('SELECT password_hash FROM users WHERE username = %s', (username,))
+            stored_hash = cursor.fetchone()
+
+        if stored_hash:
+            # Verify the password using bcrypt
+            stored_hash_str = stored_hash[0]
+            return hashpw(password.encode('utf-8'), stored_hash_str.encode('utf-8')).decode('utf-8') == stored_hash_str
+        else:
+            return False
+    except Exception as e:
+        # Handle the exception, you can print an error message or log the exception details
+        print(f"Error inserting data: {e}")
+        return None
+
+#Insert store details into the 'storedetails' table.
+def insert_data(store_id, address, city, postalcode, ownername, contactno, emailid):
     try:
         with conn, conn.cursor() as cursor:
             # Use parameterized query to prevent SQL injection
@@ -65,7 +96,7 @@ def insert_energy_data(retail_store_id, date_generated, date_entered, data_load_
         with conn, conn.cursor() as cursor:
             cursor.execute("INSERT INTO public.energyconsumption(retail_store_id, date_generated, date_entered, "
                            "data_load_type, light_consumption, light_consumption_units, temp_outside, temp_outside_units, "
-                           "temp_inside, temp_inside_units, refrigerator_usage, refrigerator_usage_units) "
+                           "temp_inside, temp_inside_units, refridgerator_usage, refridgerator_usage_units) "
                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                            (retail_store_id, date_generated, date_entered, data_load_type,
                             light_consumption, light_consumption_units, temp_outside,
